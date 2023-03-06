@@ -1,4 +1,5 @@
 import numpy as np
+from BatchGenerators.BatchGenerator import batch_generator
 
 
 def logit(X, w):
@@ -20,20 +21,40 @@ def sigmoid(p):
     return 1 / (1 + np.exp(-p))
 
 
-class LogisticRegression():
+class LogisticRegression:
 
-    def __init__(self):
+    def __init__(self, batch_size=10):
+        self.batch_size = batch_size
         self.w = None
 
-    def fit(self, X, y):
+    def fit(self, X, y, lr=0.1, batch_size=10):
         n_objects = X.shape[0]
-        self.w = np.random(n_objects)
+        self.w = np.array(np.random.rand(n_objects))
+
+        loses = []
+
+        epochs = int(np.floor(X.shape[0] // batch_size))
+        for i in range(0, epochs):
+            for X_batch, y_batch in batch_generator(X, y, batch_size):
+                predictions = self.predict_proba(X_batch, y_batch)
+
+                loss = self.__loss(predictions)
+                loses.append(loss)
+
+                self.w = self.w - (lr * self.get_grad(X_batch, y_batch, predictions))
+
+        return loses
+
+    @staticmethod
+    def get_grad(X_batch, y_batch, predictions):
+        grad = np.transpose(X_batch) @ (predictions - y_batch)
+        return grad
+
+    @staticmethod
+    def predict_proba(X, w):
+        X = np.c_[X, np.ones(X.shape[0])]
+        return sigmoid(logit(X, w))
+
     @staticmethod
     def __loss(y, p):
-        """
-
-        :param y: target
-        :param p: predictions
-        :return:
-        """
         return -np.sum(y * np.log(p) + (1 - y) * np.log(1 - p))
