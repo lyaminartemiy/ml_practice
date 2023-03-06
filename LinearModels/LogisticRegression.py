@@ -21,7 +21,7 @@ def sigmoid(p):
     return 1 / (1 + np.exp(-p))
 
 
-class LogisticRegression:
+class LogisticRegression(object):
 
     def __init__(self):
         self.w = None
@@ -47,8 +47,7 @@ class LogisticRegression:
 
         return loses
 
-    @staticmethod
-    def get_grad(X_batch, y_batch, predictions):
+    def get_grad(self, X_batch, y_batch, predictions):
         grad = np.transpose(X_batch) @ (predictions - y_batch)
         return grad
 
