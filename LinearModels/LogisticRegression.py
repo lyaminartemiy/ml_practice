@@ -20,8 +20,14 @@ def sigmoid(p):
     return 1 / (1 + np.exp(-p))
 
 
-class LogisticRegression(object):
+class LogisticRegression():
 
+    def __init__(self):
+        self.w = None
+
+    def fit(self, X, y):
+        n_objects = X.shape[0]
+        self.w = np.random(n_objects)
     @staticmethod
     def __loss(y, p):
         """
