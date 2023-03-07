@@ -23,10 +23,13 @@ def sigmoid(p):
 
 class LogisticRegression(object):
 
-    def __init__(self):
+    def __init__(self, lr=0.1, batch_size=10, random_state=42):
         self.w = None
+        self.lr = lr
+        self.batch_size = batch_size
+        self.random_state = random_state
 
-    def fit(self, X, y, lr=0.1, batch_size=10):
+    def fit(self, X, y):
         n_objects = X.shape[0]
 
         if self.w is None:
@@ -36,15 +39,15 @@ class LogisticRegression(object):
 
         loses = []
 
-        epochs = int(np.floor(X.shape[0] // batch_size))
+        epochs = int(np.floor(X.shape[0] // self.batch_size))
         for i in range(0, epochs):
-            for X_batch, y_batch in batch_generator(X, y, batch_size):
+            for X_batch, y_batch in batch_generator(X, y, self.batch_size, self.random_state):
                 predictions = self.predict_proba_internal(X_batch)
 
                 loss = self.__loss(y_batch, predictions)
                 loses.append(loss)
 
-                self.w = self.w - (lr * get_grad(X_batch, y_batch, predictions))
+                self.w = self.w - (self.lr * self.get_grad(X_batch, y_batch, predictions))
 
         return loses
 
@@ -61,7 +64,7 @@ class LogisticRegression(object):
         return sigmoid(logit(X, self.w))
 
     def predict(self, X, threshold=0.5):
-        return self.predict_proba(X) >= threshold
+        return (self.predict_proba_internal(X) >= threshold).astype(int)
 
     def get_weights(self):
         return self.w.copy()
