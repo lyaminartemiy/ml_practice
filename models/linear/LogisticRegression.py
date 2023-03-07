@@ -1,5 +1,5 @@
 import numpy as np
-from BatchGenerators.batch_generator import batch_generator
+from models.batch_generators.batch_generator import batch_generator
 
 
 def logit(X, w):

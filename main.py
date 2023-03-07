@@ -1,6 +1,5 @@
 import numpy as np
-from LinearModels import LogisticRegression
-
+from models.linear import LogisticRegression
 
 if __name__ == "__main__":
     m = LogisticRegression.LogisticRegression()
