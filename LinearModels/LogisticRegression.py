@@ -28,9 +28,11 @@ class LogisticRegression(object):
 
     def fit(self, X, y, lr=0.1, batch_size=10):
         n_objects = X.shape[0]
-        self.w = np.array(np.random.rand(n_objects))
 
-        X = np.c_[X, np.ones(X.shape[0])]
+        if self.w is None:
+            self.w = np.array(np.random.rand(n_objects))
+
+        X = np.c_[X, np.ones(n_objects)]
 
         loses = []
 
@@ -47,7 +49,8 @@ class LogisticRegression(object):
 
         return loses
 
-    def get_grad(self, X_batch, y_batch, predictions):
+    @staticmethod
+    def get_grad(X_batch, y_batch, predictions):
         grad = np.transpose(X_batch) @ (predictions - y_batch)
         return grad
 
