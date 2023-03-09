@@ -14,3 +14,6 @@ class LassoRegression(LogisticRegression):
         grad_l1 = self.alpha * np.sign(self.w)
         grad_l1[0] = 0
         return grad + grad_l1
+
+    def __loss(self, y, p):
+        return -np.sum(y * np.log(p) + (1 - y) * np.log(1 - p)) + self.alpha * np.abs(self.w)

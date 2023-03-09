@@ -35,7 +35,7 @@ class LogisticRegression(object):
         if self.w is None:
             self.w = np.array(np.random.rand(n_objects))
 
-        X = np.c_[X, np.ones(n_objects)]
+        X = np.c_[np.ones(n_objects), X]
 
         loses = []
 
@@ -57,7 +57,7 @@ class LogisticRegression(object):
         return grad
 
     def predict_proba(self, X):
-        X = np.c_[X, np.ones(X.shape[0])]
+        X = np.c_[np.ones(X.shape[0]), X]
         return sigmoid(logit(X, self.w))
 
     def predict_proba_internal(self, X):

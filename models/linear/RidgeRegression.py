@@ -14,3 +14,6 @@ class RidgeRegression(LogisticRegression):
         grad_l2 = 2 * self.alpha * self.w
         grad_l2[0] = 0
         return grad + grad_l2
+
+    def __loss(self, y, p):
+        return -np.sum(y * np.log(p) + (1 - y) * np.log(1 - p)) + self.alpha * (self.w ** 2)
