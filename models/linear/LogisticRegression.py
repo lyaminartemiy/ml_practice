@@ -23,13 +23,11 @@ def sigmoid(p):
 
 class LogisticRegression(object):
 
-    def __init__(self, lr=0.1, batch_size=10, random_state=42):
+    def __init__(self, random_state=42):
         self.w = None
-        self.lr = lr
-        self.batch_size = batch_size
         self.random_state = random_state
 
-    def fit(self, X, y):
+    def fit(self, X, y, epochs=10, lr=0.1, batch_size=100):
         n_objects = X.shape[0]
 
         if self.w is None:
@@ -39,17 +37,14 @@ class LogisticRegression(object):
 
         loses = []
 
-        epochs = int(np.floor(X.shape[0] // self.batch_size))
-        for i in range(0, epochs):
-            for X_batch, y_batch in batch_generator(X, y, self.batch_size, self.random_state):
+        for i in range(epochs):
+            for X_batch, y_batch in batch_generator(X, y, batch_size, self.random_state):
                 predictions = self.predict_proba_internal(X_batch)
 
                 loss = self.__loss(y_batch, predictions)
                 loses.append(loss)
 
-                self.w = self.w - (self.lr * self.get_grad(X_batch, y_batch, predictions))
-
-        return loses
+                self.w = self.w - (lr * self.get_grad(X_batch, y_batch, predictions))
 
     @staticmethod
     def get_grad(X_batch, y_batch, predictions):
